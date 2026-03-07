@@ -59,9 +59,11 @@ def index(request):
 
     # Filter competitors by selected event and prefetch throws for display
     if selected_event:
-        base_qs = Competitor.objects.filter(event=selected_event).prefetch_related('throw_set').order_by('number')
+        group_competitors = Competitor.objects.filter(event=selected_event).prefetch_related('throw_set').order_by('number')
+        base_qs = Competitor.objects.filter(event__event_name=selected_event.event_name, event__gender=selected_event.gender).prefetch_related('throw_set').order_by('number')
     else:
         base_qs = Competitor.objects.all().prefetch_related('throw_set').order_by('number')
+        group_competitors = base_qs
 
     competitors = base_qs
     rankings = base_qs.annotate(best=Max('throw__distance')).order_by('-best', 'number')
@@ -77,4 +79,5 @@ def index(request):
         'rankings': rankings,
         'all_events': all_events,
         'selected_event': selected_event,
+        'group_competitors': group_competitors
     })

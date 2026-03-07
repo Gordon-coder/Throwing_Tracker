@@ -39,6 +39,9 @@ class Event(models.Model):
     grade = models.CharField(max_length=1, choices=GRADE_CHOICES, null=True, blank=True)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, null=True, blank=True)
     event_name = models.CharField(max_length=100, choices=EVENT_CHOICES, null=True, blank=True)
+    group = models.IntegerField(null=True, blank=True)
+
+    qualifying_distance = models.FloatField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.gender} {self.grade} Grade {self.event_name}"
+        return f"{self.gender} {self.grade} Grade {self.event_name} Group {self.group if self.group else ''}"

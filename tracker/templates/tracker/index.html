@@ -26,7 +26,7 @@
                             <label for="event-filter" class="form-label">Filter by Event</label>
                             <select class="form-select" id="event-filter" name="event" onchange="this.form.submit()">
                                 {% for event in all_events %}
-                                    <option value="{{ event.id }}" {% if selected_event.id == event.id %}selected{% endif %}>{{ event.gender }} {{ event.grade }} Grade {{ event.event_name }}</option>
+                                    <option value="{{ event.id }}" {% if selected_event.id == event.id %}selected{% endif %}>{{ event.gender }} {{ event.event_name }} Group {{event.group}}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -40,7 +40,7 @@
                         <label for="competitor" class="form-label">Competitor</label>
                         <select class="form-select" id="competitor" name="competitor" required>
                             <option value="">Select a competitor</option>
-                            {% for c in competitors %}
+                            {% for c in group_competitors %}
                                 <option value="{{ c.pk }}">#{{ c.number }} — {{ c.name }} ({{ c.school }})</option>
                             {% endfor %}
                         </select>
@@ -62,6 +62,7 @@
                                 <tr>
                                         <th>Rank</th>
                                         <th>Number</th>
+                                        <th>Group</th>
                                         <th>Name</th>
                                         <th>School</th>
                                         <th>Best (m)</th>
@@ -71,8 +72,9 @@
                             <tbody>
                                 {% for person in rankings %}
                                     <tr>
-                                        <td>{{ forloop.counter }}</td>
+                                        <td {% if person.throws and selected_event.qualifying_distance and person.best >= selected_event.qualifying_distance %} style="background-color: #66ff33;" {% elif forloop.counter <= 12 and person.best %} style="background-color: #66ff33;" {% endif %}>{{ forloop.counter }}</td>
                                         <td>#{{ person.number }}</td>
+                                        <td>{{ person.event.group }}</td>
                                         <td>{{ person.name }}</td>
                                         <td>{{ person.school }}</td>
                                         <td>
